@@ -278,6 +278,11 @@
       color: #fff !important;
     }
 
+    /* Ultra-sleek Night Mode vector filter for standard OpenStreetMap tiles - 100% FREE, ZERO API KEY */
+    .osm-dark-tile {
+      filter: brightness(0.62) invert(1) contrast(2.6) hue-rotate(200deg) saturate(0.35) brightness(0.85) !important;
+    }
+
     /* Floating Navigation HUD (Turn-by-turn banner) */
     .navigation-hud {
       position: absolute;
@@ -989,6 +994,11 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
             </button>
             
+            <!-- Map Theme / Layer Switcher (Night / Street / Satellite) -->
+            <button class="map-icon-btn" id="btn-layer-toggle" title="Switch Map Theme (Dark / Street / Satellite)" onclick="cycleMapLayer()">
+              <span style="font-size:16px;" id="layer-icon">🌙</span>
+            </button>
+
             <!-- Pin Dropper Mode -->
             <button class="map-icon-btn" id="btn-pin-mode" title="Click Map to Reposition" onclick="togglePinMode()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1187,6 +1197,34 @@
 
     let workshops = [];
     let map, userMarker, radarCircle, routePolyline, vehicleMarker, workshopMarkers = [];
+    let currentTileMode = 'osmDark';
+    let currentTileLayer = null;
+
+    function cycleMapLayer() {
+      const modes = ['osmDark', 'osmStreet', 'satellite', 'esriDark'];
+      const nextIdx = (modes.indexOf(currentTileMode) + 1) % modes.length;
+      currentTileMode = modes[nextIdx];
+
+      if (currentTileLayer) map.removeLayer(currentTileLayer);
+      currentTileLayer = window.tileLayers[currentTileMode].addTo(map);
+
+      const icons = {
+        osmDark: '🌙',
+        osmStreet: '🗺️',
+        satellite: '🛰️',
+        esriDark: '🏙️'
+      };
+      const names = {
+        osmDark: 'Night Drive (Dark OSM)',
+        osmStreet: 'Day Street (OSM)',
+        satellite: 'Satellite Imagery (Esri)',
+        esriDark: 'Slate Dark Canvas'
+      };
+
+      const iconEl = document.getElementById('layer-icon');
+      if (iconEl) iconEl.textContent = icons[currentTileMode];
+      logEvent('MAP_THEME', `Map style switched to: ${names[currentTileMode]} (No API key required)`);
+    }
 
     // ==========================================
     // 2. HAVERSINE DISTANCE MATH
@@ -1211,11 +1249,29 @@
         attributionControl: false
       }).setView([STATE.userLat, STATE.userLng], 14);
 
-      // CartoDB Dark Matter retina tiles
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd'
-      }).addTo(map);
+      // OpenStreetMap and Esri Tile Layers (100% Free, NO API Key Required)
+      window.tileLayers = {
+        osmDark: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          className: 'osm-dark-tile',
+          attribution: '&copy; OpenStreetMap contributors'
+        }),
+        osmStreet: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors'
+        }),
+        satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 18,
+          attribution: '&copy; Esri World Imagery'
+        }),
+        esriDark: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 16,
+          attribution: '&copy; Esri'
+        })
+      };
+
+      currentTileMode = 'osmDark';
+      currentTileLayer = window.tileLayers.osmDark.addTo(map);
 
       // Add Zoom Control to bottom-right
       L.control.zoom({ position: 'topleft' }).addTo(map);

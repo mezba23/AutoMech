@@ -1,136 +1,79 @@
 package com.example.mapbox;
 
-import static com.mapbox.maps.plugin.gestures.GesturesUtils.getGestures;
-import static com.mapbox.maps.plugin.locationcomponent.LocationComponentUtils.getLocationComponent;
-
 import android.Manifest;
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.webkit.GeolocationPermissions;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.android.gestures.MoveGestureDetector;
-import com.mapbox.geojson.Point;
-import com.mapbox.maps.CameraOptions;
-import com.mapbox.maps.MapView;
-import com.mapbox.maps.Style;
-import com.mapbox.maps.plugin.LocationPuck2D;
-import com.mapbox.maps.plugin.gestures.OnMoveListener;
-import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin;
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener;
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private MapView mapView;
-    FloatingActionButton floatingActionButton;
-    Button new_btn;
+    private WebView webView;
 
-    private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-        @Override
-        public void onActivityResult(Boolean result) {
-            if (result) {
-                Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
+    private final ActivityResultLauncher<String[]> locationPermissionRequest =
+        registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+            @Override
+            public void onActivityResult(Map<String, Boolean> result) {
+                Boolean fineLocationGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
+                if (fineLocationGranted != null && fineLocationGranted) {
+                    Toast.makeText(MainActivity.this, "GPS Location Enabled", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-    });
+        });
 
-    private final OnIndicatorBearingChangedListener onIndicatorBearingChangedListener = new OnIndicatorBearingChangedListener() {
-        @Override
-        public void onIndicatorBearingChanged(double v) {
-            mapView.getMapboxMap().setCamera(new CameraOptions.Builder().bearing(v).build());
-        }
-    };
-
-    private final OnIndicatorPositionChangedListener onIndicatorPositionChangedListener = new OnIndicatorPositionChangedListener() {
-        @Override
-        public void onIndicatorPositionChanged(@NonNull Point point) {
-            mapView.getMapboxMap().setCamera(new CameraOptions.Builder().center(point).zoom(20.0).build());
-            getGestures(mapView).setFocalPoint(mapView.getMapboxMap().pixelForCoordinate(point));
-        }
-    };
-
-    private final OnMoveListener onMoveListener = new OnMoveListener() {
-        @Override
-        public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
-            getLocationComponent(mapView).removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener);
-            getLocationComponent(mapView).removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener);
-            getGestures(mapView).removeOnMoveListener(onMoveListener);
-            floatingActionButton.show();
-        }
-
-        @Override
-        public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) {
-            return false;
-        }
-
-        @Override
-        public void onMoveEnd(@NonNull MoveGestureDetector moveGestureDetector) {
-
-        }
-    };
-
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mapView = findViewById(R.id.mapView);
-        floatingActionButton = findViewById(R.id.focusLocation);
-        new_btn=findViewById(R.id.new_btn);
+        // Request Location Permissions
+        locationPermissionRequest.launch(new String[] {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        });
 
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            activityResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        webView = findViewById(R.id.webView);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setGeolocationEnabled(true);
+        settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+            }
+        });
+
+        webView.setWebViewClient(new WebViewClient());
+
+        // Load local bundled enterprise navigation platform
+        webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
         }
-
-        floatingActionButton.hide();
-        mapView.getMapboxMap().loadStyleUri(Style.SATELLITE, new Style.OnStyleLoaded() {
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(20.0).build());
-                LocationComponentPlugin locationComponentPlugin = getLocationComponent(mapView);
-                locationComponentPlugin.setEnabled(true);
-                LocationPuck2D locationPuck2D = new LocationPuck2D();
-                locationPuck2D.setBearingImage(AppCompatResources.getDrawable(MainActivity.this, R.drawable.baseline_location_on_24));
-                locationComponentPlugin.setLocationPuck(locationPuck2D);
-                locationComponentPlugin.addOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener);
-                locationComponentPlugin.addOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener);
-                getGestures(mapView).addOnMoveListener(onMoveListener);
-
-                floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        locationComponentPlugin.addOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener);
-                        locationComponentPlugin.addOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener);
-                        getGestures(mapView).addOnMoveListener(onMoveListener);
-                        floatingActionButton.hide();
-//
-//                        Intent i = new Intent(getApplicationContext(), ItemListViewActivity.class);
-//                        startActivity(i);
-                    }
-                });
-            }
-        });
-        // Initialize the button
-        //Button new_btn = findViewById(R.id.new_btn);
-
-        // Set onClickListener for the button
-        new_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ItemListViewActivity.class);
-                startActivity(i);
-            }
-        });
     }
 }

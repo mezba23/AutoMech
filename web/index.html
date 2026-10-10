@@ -1163,6 +1163,12 @@
       sanfrancisco: { name: 'San Francisco', lat: 37.7749, lng: -122.4194 }
     };
 
+    // Auto-detect mobile devices or Android WebView
+    if (window.innerWidth <= 768 || navigator.userAgent.toLowerCase().includes('android') || navigator.userAgent.toLowerCase().includes('mobile')) {
+      STATE.viewMode = 'fullscreen';
+      document.body.className = 'mode-fullscreen';
+    }
+
     // Realistic Workshop Seed Generator based on anchor coordinates
     function generateNearbyWorkshops(centerLat, centerLng) {
       const templates = [

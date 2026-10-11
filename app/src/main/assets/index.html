@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>AutoMech Enterprise - Navigation & Roadside Assistance</title>
   <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#0284c7">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AutoMech">
+  <meta name="mobile-web-app-capable" content="yes">
   
   <!-- Fonts & Leaflet Map CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,31 +184,82 @@
     }
 
     /* Full-Screen Web App override */
+    body.mode-fullscreen {
+      overflow: hidden;
+    }
+    body.mode-fullscreen header.platform-header {
+      display: none;
+    }
     body.mode-fullscreen .main-workspace {
       padding: 0;
       max-width: 100%;
+      height: 100vh;
+      height: 100dvh;
     }
     body.mode-fullscreen .simulator-wrapper {
       width: 100%;
-      height: calc(100vh - 65px);
+      height: 100%;
+      height: 100dvh;
     }
     body.mode-fullscreen .device-bezel {
       width: 100%;
       height: 100%;
+      height: 100dvh;
       border-radius: 0;
       padding: 0;
       box-shadow: none;
       border: none;
     }
     body.mode-fullscreen .device-bezel::before {
-      display: none; /* remove notch */
+      display: none; /* remove mock notch */
+    }
+    body.mode-fullscreen .phone-status-bar {
+      display: none; /* remove mock status bar */
     }
     body.mode-fullscreen .telemetry-console {
       display: none;
     }
+    body.mode-fullscreen .map-top-bar {
+      top: max(14px, env(safe-area-inset-top, 14px));
+    }
+    body.mode-fullscreen .navigation-hud {
+      top: max(14px, env(safe-area-inset-top, 14px));
+    }
+    body.mode-fullscreen .bottom-sheet {
+      padding-bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px)));
+    }
 
     body.mode-phone .telemetry-console {
       display: none;
+    }
+
+    .fullscreen-exit-pill {
+      display: none;
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 5000;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--bg-card-border);
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      transition: all 0.2s;
+    }
+    .fullscreen-exit-pill:hover {
+      color: white;
+      border-color: #38bdf8;
+      background: rgba(30, 41, 59, 0.95);
+    }
+    body.mode-fullscreen:not(.is-mobile-screen) .fullscreen-exit-pill {
+      display: flex;
     }
 
     /* Smartphone Notch */
@@ -881,14 +936,117 @@
     }
     .vehicle-marker svg { width: 18px; height: 18px; fill: white; }
 
-    @media (max-width: 900px) {
-      .main-workspace { flex-direction: column; align-items: center; }
-      .telemetry-console { width: 100%; min-width: auto; height: 350px; }
-      .device-bezel { width: 100%; max-width: 420px; height: 780px; }
+    /* Mobile-first full screen on phones, small viewports and touch devices */
+    @media (max-width: 860px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+      html, body {
+        height: 100% !important;
+        height: 100dvh !important;
+        width: 100vw !important;
+        overflow: hidden !important;
+        position: fixed !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* Completely hide desktop website header navigation bar on phones */
+      header.platform-header {
+        display: none !important;
+      }
+
+      .fullscreen-exit-pill {
+        display: none !important;
+      }
+
+      .main-workspace {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100vw !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        flex-direction: column !important;
+      }
+
+      .simulator-wrapper {
+        width: 100vw !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        flex: 1 !important;
+      }
+
+      .device-bezel {
+        width: 100vw !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      /* Hide simulated notch on actual mobile phones */
+      .device-bezel::before {
+        display: none !important;
+      }
+
+      /* Hide fake phone status bar (battery/5G/clock) on real mobile phones */
+      .phone-status-bar {
+        display: none !important;
+      }
+
+      .phone-screen {
+        border-radius: 0 !important;
+        width: 100vw !important;
+        height: 100% !important;
+        height: 100dvh !important;
+      }
+
+      #map {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      /* Hide desktop telemetry console completely on phones */
+      .telemetry-console {
+        display: none !important;
+      }
+
+      /* Top Search and Turn-by-Turn HUD with native safe-area insets */
+      .map-top-bar {
+        top: max(10px, env(safe-area-inset-top, 10px)) !important;
+        left: 10px !important;
+        right: 10px !important;
+      }
+
+      .navigation-hud {
+        top: max(10px, env(safe-area-inset-top, 10px)) !important;
+        left: 10px !important;
+        right: 10px !important;
+      }
+
+      .map-floating-controls {
+        top: calc(max(10px, env(safe-area-inset-top, 10px)) + 92px) !important;
+        right: 10px !important;
+      }
+
+      .bottom-sheet {
+        padding-bottom: max(22px, calc(16px + env(safe-area-inset-bottom, 0px))) !important;
+      }
     }
   </style>
 </head>
 <body class="mode-split">
+
+  <!-- Floating Exit Fullscreen pill for desktop mode-fullscreen -->
+  <button class="fullscreen-exit-pill" id="fullscreen-exit-pill" onclick="setViewMode('split')" title="Exit Fullscreen">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    Exit Fullscreen
+  </button>
 
   <!-- Enterprise Header Bar -->
   <header class="platform-header">
@@ -989,6 +1147,11 @@
 
           <!-- Floating Map Quick Controls -->
           <div class="map-floating-controls">
+            <!-- Fullscreen View Toggle -->
+            <button class="map-icon-btn" id="btn-fullscreen-toggle" title="Toggle Fullscreen" onclick="toggleNativeFullscreen()">
+              <svg id="fullscreen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+
             <!-- Locate Me -->
             <button class="map-icon-btn" title="Detect Real GPS" onclick="getUserLiveLocation()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
@@ -1852,12 +2015,73 @@
     }
 
     function setViewMode(mode) {
-      document.body.className = `mode-${mode}`;
+      const isMobile = window.innerWidth <= 860 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      document.body.className = `mode-${mode}${isMobile ? ' is-mobile-screen' : ''}`;
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`btn-${mode}`).classList.add('active');
-      setTimeout(() => map.invalidateSize(), 300);
+      const activeBtn = document.getElementById(`btn-${mode}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      setTimeout(() => { if (map) map.invalidateSize(); }, 300);
       logEvent('VIEWPORT', `Switched layout view to: ${mode.toUpperCase()}`);
     }
+
+    function toggleNativeFullscreen() {
+      const doc = document;
+      const docEl = document.documentElement;
+      const isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+
+      if (!isFs) {
+        const rfs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+        if (rfs) {
+          rfs.call(docEl).catch(err => {
+            console.warn('Fullscreen request failed:', err);
+          });
+        }
+      } else {
+        const efs = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+        if (efs) {
+          efs.call(doc).catch(() => {});
+        }
+      }
+    }
+
+    function updateFullscreenIcon() {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      const svg = document.getElementById('fullscreen-icon');
+      if (!svg) return;
+      if (isFs) {
+        // Exit/compress icon
+        svg.innerHTML = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
+      } else {
+        // Expand icon
+        svg.innerHTML = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      updateFullscreenIcon();
+      if (map) setTimeout(() => map.invalidateSize(), 200);
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      updateFullscreenIcon();
+      if (map) setTimeout(() => map.invalidateSize(), 200);
+    });
+
+    function checkResponsiveDevice() {
+      const isMobile = window.innerWidth <= 860 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobile) {
+        document.body.classList.add('is-mobile-screen');
+        if (!document.body.classList.contains('mode-fullscreen')) {
+          setViewMode('fullscreen');
+        }
+      } else {
+        document.body.classList.remove('is-mobile-screen');
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      checkResponsiveDevice();
+      if (map) map.invalidateSize();
+    });
 
     function toggleSheetExpand() {
       const sheet = document.getElementById('bottom-sheet');
@@ -1929,6 +2153,7 @@
 
     // Window load trigger
     window.addEventListener('load', () => {
+      checkResponsiveDevice();
       initMap();
     });
   </script>

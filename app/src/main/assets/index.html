@@ -20,8 +20,8 @@
   <style>
     :root {
       --bg-dark: #090d16;
-      --bg-card: rgba(18, 24, 38, 0.88);
-      --bg-card-border: rgba(255, 255, 255, 0.08);
+      --bg-card: rgba(18, 24, 38, 0.90);
+      --bg-card-border: rgba(255, 255, 255, 0.09);
       --primary: #0284c7;
       --primary-glow: #38bdf8;
       --accent: #10b981;
@@ -44,6 +44,7 @@
       background: radial-gradient(circle at 50% 0%, #1e293b 0%, #090d16 80%);
       color: var(--text-main);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
@@ -55,12 +56,13 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 24px;
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--bg-card-border);
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     .brand-box {
@@ -69,19 +71,19 @@
       gap: 12px;
     }
     .brand-icon {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, #0284c7, #38bdf8);
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45);
     }
     .brand-icon svg { width: 22px; height: 22px; fill: white; }
     .brand-title {
       font-weight: 800;
-      font-size: 18px;
+      font-size: 19px;
       letter-spacing: -0.5px;
       background: linear-gradient(to right, #ffffff, #94a3b8);
       -webkit-background-clip: text;
@@ -90,12 +92,12 @@
     .badge-enterprise {
       font-size: 10px;
       text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
       background: rgba(56, 189, 248, 0.15);
       color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 2px 8px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 3px 9px;
       border-radius: 999px;
       margin-left: 6px;
     }
@@ -103,13 +105,39 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    /* Live Telemetry Ping indicator in header */
+    .telemetry-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: blinkDot 1.5s infinite;
+    }
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
     }
 
     /* Mode Pill Switcher */
     .view-mode-selector {
       display: flex;
-      background: rgba(30, 41, 59, 0.8);
+      background: rgba(30, 41, 59, 0.85);
       padding: 3px;
       border-radius: 12px;
       border: 1px solid var(--bg-card-border);
@@ -132,7 +160,7 @@
     .mode-btn.active {
       background: var(--primary);
       color: white;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.45);
     }
 
     /* Main Container Layout */
@@ -157,7 +185,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
       min-width: 380px;
     }
 
@@ -175,7 +203,7 @@
       background: #000000;
       border-radius: 50px;
       padding: 12px;
-      box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.8), 0 0 0 3px #334155, inset 0 0 4px 2px rgba(255,255,255,0.2);
+      box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85), 0 0 0 3px #334155, inset 0 0 4px 2px rgba(255,255,255,0.18);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -184,9 +212,6 @@
     }
 
     /* Full-Screen Web App override */
-    body.mode-fullscreen {
-      overflow: hidden;
-    }
     body.mode-fullscreen header.platform-header {
       display: none;
     }
@@ -211,10 +236,10 @@
       border: none;
     }
     body.mode-fullscreen .device-bezel::before {
-      display: none; /* remove mock notch */
+      display: none;
     }
     body.mode-fullscreen .phone-status-bar {
-      display: none; /* remove mock status bar */
+      display: none;
     }
     body.mode-fullscreen .telemetry-console {
       display: none;
@@ -239,7 +264,7 @@
       top: 14px;
       right: 14px;
       z-index: 5000;
-      background: rgba(15, 23, 42, 0.88);
+      background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(12px);
       border: 1px solid var(--bg-card-border);
       color: #cbd5e1;
@@ -317,7 +342,7 @@
       background: #0f172a;
     }
 
-    /* Custom Leaflet Dark Stying */
+    /* Custom Leaflet Dark Styling */
     .leaflet-bar {
       border: none !important;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
@@ -344,14 +369,14 @@
       top: 44px;
       left: 12px;
       right: 12px;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 41, 59, 0.94) 100%);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 20px;
       padding: 14px 16px;
-      display: none; /* hidden until navigation starts */
+      display: none;
       z-index: 2000;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.65), 0 0 20px rgba(56, 189, 248, 0.15);
       animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .navigation-hud.active {
@@ -364,22 +389,22 @@
       gap: 14px;
     }
     .maneuver-icon-box {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       background: linear-gradient(135deg, #0284c7, #0369a1);
-      border-radius: 14px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4);
+      box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45);
     }
     .maneuver-icon-box svg {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       fill: none;
       stroke: white;
-      stroke-width: 2.4;
+      stroke-width: 2.6;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -387,19 +412,19 @@
       flex: 1;
     }
     .next-distance {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       color: #38bdf8;
       letter-spacing: -0.5px;
     }
     .next-street {
-      font-size: 13px;
-      font-weight: 600;
-      color: #f1f5f9;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f8fafc;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 190px;
+      max-width: 200px;
     }
 
     .nav-hud-bottom {
@@ -407,14 +432,14 @@
       justify-content: space-between;
       align-items: center;
       margin-top: 10px;
-      padding-top: 8px;
+      padding-top: 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 12px;
       color: var(--text-muted);
     }
     .trip-meta {
       display: flex;
-      gap: 14px;
+      gap: 12px;
     }
     .trip-meta strong {
       color: #fff;
@@ -427,20 +452,20 @@
     }
     .hud-btn {
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
       color: white;
-      padding: 4px 10px;
-      border-radius: 8px;
+      padding: 5px 11px;
+      border-radius: 9px;
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       transition: all 0.2s;
     }
     .hud-btn:hover { background: rgba(255,255,255,0.18); }
-    .hud-btn.danger { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
+    .hud-btn.danger { background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.5); color: #f87171; }
 
     /* Map Floating Controls (Top Search & Location Pill) */
     .map-top-bar {
@@ -454,15 +479,20 @@
       gap: 8px;
     }
     .search-card {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(16px);
       border: 1px solid var(--bg-card-border);
-      border-radius: 16px;
-      padding: 8px 12px;
+      border-radius: 18px;
+      padding: 9px 14px;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+      transition: all 0.2s;
+    }
+    .search-card:focus-within {
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(56, 189, 248, 0.15);
     }
     .search-input {
       background: transparent;
@@ -474,32 +504,42 @@
       flex: 1;
     }
     .search-input::placeholder { color: #64748b; }
+    .search-clear-btn {
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      display: none;
+      padding: 2px;
+    }
+    .search-clear-btn:hover { color: #cbd5e1; }
 
     /* Search Autocomplete dropdown */
     .search-dropdown {
       position: absolute;
-      top: 48px;
+      top: 50px;
       left: 0;
       right: 0;
       background: rgba(15, 23, 42, 0.98);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       border: 1px solid var(--bg-card-border);
-      border-radius: 14px;
-      max-height: 240px;
+      border-radius: 16px;
+      max-height: 250px;
       overflow-y: auto;
       display: none;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
       z-index: 3000;
     }
     .search-item {
-      padding: 10px 14px;
+      padding: 11px 15px;
       font-size: 13px;
       color: #cbd5e1;
       cursor: pointer;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      transition: background 0.15s;
     }
     .search-item:hover {
       background: rgba(56, 189, 248, 0.15);
@@ -516,11 +556,11 @@
     }
     .city-pills::-webkit-scrollbar { display: none; }
     .city-pill {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--bg-card-border);
       color: #cbd5e1;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 600;
@@ -529,12 +569,13 @@
       transition: all 0.2s;
     }
     .city-pill:hover, .city-pill.active {
-      background: rgba(2, 132, 199, 0.25);
+      background: rgba(2, 132, 199, 0.3);
       border-color: #38bdf8;
       color: #38bdf8;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
     }
 
-    /* Floating Action Buttons (Locate, SOS, Radar) */
+    /* Floating Action Buttons (Locate, Layer, Pin, SOS) */
     .map-floating-controls {
       position: absolute;
       right: 14px;
@@ -545,38 +586,38 @@
       gap: 10px;
     }
     .map-icon-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(12px);
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.90);
+      backdrop-filter: blur(14px);
       border: 1px solid var(--bg-card-border);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
       transition: all 0.2s;
     }
     .map-icon-btn:hover {
-      transform: scale(1.05);
+      transform: scale(1.06);
       border-color: #38bdf8;
       color: #38bdf8;
     }
-    .map-icon-btn svg { width: 20px; height: 20px; }
+    .map-icon-btn svg { width: 21px; height: 21px; }
 
     /* SOS Emergency Button Pulsing */
     .sos-emergency-btn {
       background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-      border: 2px solid rgba(255,255,255,0.4) !important;
+      border: 2px solid rgba(255,255,255,0.45) !important;
       color: white !important;
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.65) !important;
       animation: pulseSos 1.8s infinite;
     }
     @keyframes pulseSos {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-      70% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.75); }
+      70% { transform: scale(1.07); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
@@ -586,26 +627,28 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(11, 17, 32, 0.94);
-      backdrop-filter: blur(20px);
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.96) 0%, rgba(9, 13, 22, 0.98) 100%);
+      backdrop-filter: blur(24px);
       border-top: 1px solid var(--bg-card-border);
-      border-radius: 28px 28px 0 0;
-      padding: 14px 16px 20px 16px;
+      border-radius: 30px 30px 0 0;
+      padding: 14px 16px 22px 16px;
       z-index: 1500;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
-      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 -12px 45px rgba(0,0,0,0.7);
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       max-height: 48%;
       display: flex;
       flex-direction: column;
     }
     .sheet-handle {
-      width: 40px;
+      width: 44px;
       height: 4px;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.25);
       border-radius: 999px;
       margin: 0 auto 12px auto;
       cursor: pointer;
+      transition: background 0.2s;
     }
+    .sheet-handle:hover { background: rgba(56, 189, 248, 0.6); }
 
     .category-filter-bar {
       display: flex;
@@ -618,10 +661,10 @@
     .category-filter-bar::-webkit-scrollbar { display: none; }
     .cat-btn {
       background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.09);
       color: #cbd5e1;
-      padding: 6px 12px;
-      border-radius: 12px;
+      padding: 7px 13px;
+      border-radius: 14px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
@@ -631,10 +674,12 @@
       gap: 6px;
       transition: all 0.2s;
     }
+    .cat-btn:hover { background: rgba(255,255,255,0.12); color: white; }
     .cat-btn.active {
-      background: rgba(2, 132, 199, 0.2);
+      background: rgba(2, 132, 199, 0.25);
       border-color: #38bdf8;
       color: #38bdf8;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
     }
 
     /* Workshop List Cards */
@@ -643,52 +688,74 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
       padding-right: 4px;
     }
     .workshop-list::-webkit-scrollbar { width: 4px; }
-    .workshop-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    .workshop-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 4px; }
 
     .workshop-card {
-      background: rgba(255, 255, 255, 0.04);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
       border: 1px solid var(--bg-card-border);
-      border-radius: 16px;
-      padding: 12px 14px;
+      border-radius: 18px;
+      padding: 13px 15px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.22s ease;
       position: relative;
     }
-    .workshop-card:hover, .workshop-card.selected {
-      background: rgba(56, 189, 248, 0.08);
-      border-color: rgba(56, 189, 248, 0.4);
-      transform: translateY(-1px);
+    .workshop-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: transparent;
+      transition: background 0.2s;
     }
+    .workshop-card:hover, .workshop-card.selected {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border-color: rgba(56, 189, 248, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .workshop-card.selected::before {
+      background: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
     .ws-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .ws-name {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .ws-distance {
       font-size: 12px;
       font-weight: 700;
       color: #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
-      padding: 2px 8px;
-      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 3px 9px;
+      border-radius: 9px;
     }
     .ws-meta {
       font-size: 12px;
       color: var(--text-muted);
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 9px;
+      flex-wrap: wrap;
     }
     .ws-rating {
       color: #fbbf24;
@@ -697,17 +764,24 @@
       align-items: center;
       gap: 3px;
     }
+    .ws-badge-247 {
+      color: #10b981;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 1px 6px;
+      border-radius: 6px;
+    }
     .ws-tags {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
     }
     .ws-tag {
-      font-size: 10px;
+      font-size: 10.5px;
       background: rgba(255,255,255,0.06);
       color: #94a3b8;
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 3px 7px;
+      border-radius: 7px;
     }
 
     .ws-actions {
@@ -717,28 +791,35 @@
     }
     .btn-action {
       flex: 1;
-      padding: 7px 10px;
-      border-radius: 10px;
-      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 7px;
       transition: all 0.2s;
     }
     .btn-action.route {
-      background: var(--primary);
+      background: linear-gradient(135deg, #0284c7, #0369a1);
       color: white;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
     }
-    .btn-action.route:hover { background: #0369a1; }
+    .btn-action.route:hover {
+      background: linear-gradient(135deg, #0369a1, #0284c7);
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.5);
+    }
     .btn-action.call {
       background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
       color: white;
     }
-    .btn-action.call:hover { background: rgba(255,255,255,0.15); }
+    .btn-action.call:hover {
+      background: rgba(255,255,255,0.16);
+    }
 
     /* Telemetry & Enterprise Operations Console (Right Side) */
     .console-header {
@@ -773,7 +854,7 @@
       flex: 1;
       background: none;
       border: none;
-      padding: 10px 14px;
+      padding: 11px 14px;
       font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
@@ -807,11 +888,11 @@
     .kpi-card {
       background: rgba(255,255,255,0.03);
       border: 1px solid var(--bg-card-border);
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 14px;
+      padding: 12px 14px;
     }
     .kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .kpi-val { font-size: 18px; font-weight: 800; color: #fff; margin-top: 4px; }
+    .kpi-val { font-size: 19px; font-weight: 800; color: #fff; margin-top: 4px; }
     .kpi-val.accent { color: #38bdf8; }
     .kpi-val.success { color: #10b981; }
 
@@ -821,10 +902,10 @@
       gap: 8px;
     }
     .log-entry {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       border-left: 3px solid #38bdf8;
-      border-radius: 4px;
-      padding: 8px 10px;
+      border-radius: 6px;
+      padding: 9px 12px;
       font-size: 11px;
     }
     .log-entry.warn { border-left-color: #f59e0b; }
@@ -836,8 +917,8 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(12px);
       z-index: 99999;
       display: none;
       align-items: center;
@@ -848,28 +929,29 @@
 
     .sos-modal-card {
       background: #0f172a;
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      border: 1px solid rgba(239, 68, 68, 0.45);
       border-radius: 28px;
       max-width: 420px;
       width: 100%;
       padding: 28px;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 20px 65px rgba(239, 68, 68, 0.35);
       animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .countdown-circle {
-      width: 80px;
-      height: 80px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
       background: rgba(239, 68, 68, 0.15);
       border: 3px solid #ef4444;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 800;
       color: #ef4444;
       margin: 0 auto 16px auto;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
     }
 
     /* Simulation Control Overlay */
@@ -878,15 +960,16 @@
       bottom: 8px;
       left: 12px;
       right: 12px;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--bg-card-border);
-      border-radius: 14px;
-      padding: 8px 14px;
+      border-radius: 16px;
+      padding: 9px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       z-index: 1600;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.55);
     }
 
     /* Keyframes */
@@ -901,149 +984,52 @@
 
     /* Custom Map Markers */
     .pulse-marker {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       background: #0284c7;
       border: 3px solid #ffffff;
       border-radius: 50%;
-      box-shadow: 0 0 16px #38bdf8;
+      box-shadow: 0 0 20px #38bdf8;
       position: relative;
     }
     .pulse-marker::after {
       content: '';
       position: absolute;
-      top: -12px; left: -12px; right: -12px; bottom: -12px;
+      top: -14px; left: -14px; right: -14px; bottom: -14px;
       border-radius: 50%;
-      background: rgba(56, 189, 248, 0.3);
+      background: rgba(56, 189, 248, 0.35);
       animation: radarRing 2s infinite;
     }
     @keyframes radarRing {
       0% { transform: scale(0.6); opacity: 1; }
-      100% { transform: scale(2.2); opacity: 0; }
+      100% { transform: scale(2.3); opacity: 0; }
     }
 
     .vehicle-marker {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       background: #10b981;
       border: 2px solid #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 16px #10b981;
-      transition: transform 0.2s linear;
+      box-shadow: 0 0 18px #10b981;
+      transition: transform 0.25s linear;
     }
-    .vehicle-marker svg { width: 18px; height: 18px; fill: white; }
+    .vehicle-marker svg { width: 19px; height: 19px; fill: white; }
 
-    /* Mobile-first full screen on phones, small viewports and touch devices */
-    @media (max-width: 860px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
-      html, body {
-        height: 100% !important;
-        height: 100dvh !important;
-        width: 100vw !important;
-        overflow: hidden !important;
-        position: fixed !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-
-      /* Completely hide desktop website header navigation bar on phones */
-      header.platform-header {
-        display: none !important;
-      }
-
-      .fullscreen-exit-pill {
-        display: none !important;
-      }
-
-      .main-workspace {
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100vw !important;
-        height: 100% !important;
-        height: 100dvh !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
-        flex-direction: column !important;
-      }
-
-      .simulator-wrapper {
-        width: 100vw !important;
-        height: 100% !important;
-        height: 100dvh !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        flex: 1 !important;
-      }
-
-      .device-bezel {
-        width: 100vw !important;
-        height: 100% !important;
-        height: 100dvh !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        box-shadow: none !important;
-      }
-
-      /* Hide simulated notch on actual mobile phones */
-      .device-bezel::before {
-        display: none !important;
-      }
-
-      /* Hide fake phone status bar (battery/5G/clock) on real mobile phones */
-      .phone-status-bar {
-        display: none !important;
-      }
-
-      .phone-screen {
-        border-radius: 0 !important;
-        width: 100vw !important;
-        height: 100% !important;
-        height: 100dvh !important;
-      }
-
-      #map {
-        width: 100% !important;
-        height: 100% !important;
-      }
-
-      /* Hide desktop telemetry console completely on phones */
-      .telemetry-console {
-        display: none !important;
-      }
-
-      /* Top Search and Turn-by-Turn HUD with native safe-area insets */
-      .map-top-bar {
-        top: max(10px, env(safe-area-inset-top, 10px)) !important;
-        left: 10px !important;
-        right: 10px !important;
-      }
-
-      .navigation-hud {
-        top: max(10px, env(safe-area-inset-top, 10px)) !important;
-        left: 10px !important;
-        right: 10px !important;
-      }
-
-      .map-floating-controls {
-        top: calc(max(10px, env(safe-area-inset-top, 10px)) + 92px) !important;
-        right: 10px !important;
-      }
-
-      .bottom-sheet {
-        padding-bottom: max(22px, calc(16px + env(safe-area-inset-bottom, 0px))) !important;
-      }
+    @media (max-width: 900px) {
+      .main-workspace { flex-direction: column; align-items: center; }
+      .telemetry-console { width: 100%; min-width: auto; height: 350px; }
+      .device-bezel { width: 100%; max-width: 420px; height: 780px; }
     }
   </style>
 </head>
 <body class="mode-split">
 
-  <!-- Floating Exit Fullscreen pill for desktop mode-fullscreen -->
-  <button class="fullscreen-exit-pill" id="fullscreen-exit-pill" onclick="setViewMode('split')" title="Exit Fullscreen">
+  <!-- Desktop Fullscreen Exit Pill -->
+  <button class="fullscreen-exit-pill" onclick="setViewMode('split')">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     Exit Fullscreen
   </button>
@@ -1055,13 +1041,21 @@
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
       <div>
-        <span class="brand-title">AutoMech Enterprise</span>
-        <span class="badge-enterprise">PROD NAV v2.4</span>
+        <div style="display:flex; align-items:center;">
+          <span class="brand-title">AutoMech Enterprise</span>
+          <span class="badge-enterprise">PROD NAV v2.4</span>
+        </div>
+        <div style="font-size:11px; color:#64748b; margin-top:2px;">Turn-by-Turn Navigation & Rapid Assistance Platform</div>
       </div>
     </div>
 
-    <!-- View Mode Switcher -->
+    <!-- Header Live Status & View Mode Switcher -->
     <div class="header-actions">
+      <div class="telemetry-indicator">
+        <div class="pulse-dot"></div>
+        <span>GPS Matrix Online</span>
+      </div>
+
       <div class="view-mode-selector">
         <button class="mode-btn active" id="btn-split" onclick="setViewMode('split')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
@@ -1131,6 +1125,7 @@
             <div class="search-card" style="position:relative;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input type="text" class="search-input" id="search-input" placeholder="Search workshop or location..." autocomplete="off">
+              <button class="search-clear-btn" id="search-clear-btn" onclick="clearSearch()">✕</button>
               <div class="search-dropdown" id="search-dropdown"></div>
             </div>
 
@@ -1147,11 +1142,6 @@
 
           <!-- Floating Map Quick Controls -->
           <div class="map-floating-controls">
-            <!-- Fullscreen View Toggle -->
-            <button class="map-icon-btn" id="btn-fullscreen-toggle" title="Toggle Fullscreen" onclick="toggleNativeFullscreen()">
-              <svg id="fullscreen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-            </button>
-
             <!-- Locate Me -->
             <button class="map-icon-btn" title="Detect Real GPS" onclick="getUserLiveLocation()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
@@ -1188,7 +1178,7 @@
             </div>
 
             <!-- Radius Filter Slider Header -->
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:11px; color:#94a3b8;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; font-size:11px; color:#94a3b8;">
               <span>Discovered <strong id="workshop-count" style="color:#fff;">8 Garages</strong></span>
               <div style="display:flex; align-items:center; gap:6px;">
                 <span>Radius:</span>
@@ -1329,7 +1319,7 @@
     // Auto-detect mobile devices or Android WebView
     if (window.innerWidth <= 768 || navigator.userAgent.toLowerCase().includes('android') || navigator.userAgent.toLowerCase().includes('mobile')) {
       STATE.viewMode = 'fullscreen';
-      document.body.className = 'mode-fullscreen';
+      document.body.className = 'mode-fullscreen is-mobile-screen';
     }
 
     // Realistic Workshop Seed Generator based on anchor coordinates
@@ -1410,7 +1400,7 @@
     }
 
     // ==========================================
-    // 3. MAP INITIALIZATION (LEAFLET + DARK TILES)
+    // 3. MAP INITIALIZATION (LEAFLET + TILES)
     // ==========================================
     function initMap() {
       map = L.map('map', {
@@ -1449,8 +1439,8 @@
       const userIcon = L.divIcon({
         className: 'user-pin-container',
         html: `<div class="pulse-marker" title="Your GPS Location"></div>`,
-        iconSize: [22, 22],
-        iconAnchor: [11, 11]
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
       });
       userMarker = L.marker([STATE.userLat, STATE.userLng], { icon: userIcon }).addTo(map);
 
@@ -1495,15 +1485,15 @@
 
       filtered.forEach(ws => {
         const markerHtml = `
-          <div style="background:#0284c7; border:2px solid #fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(2,132,199,0.8); cursor:pointer;">
-            <span style="font-size:12px;">🔧</span>
+          <div style="background:linear-gradient(135deg, #0284c7, #0369a1); border:2px solid #fff; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 14px rgba(2,132,199,0.85); cursor:pointer;">
+            <span style="font-size:13px;">🔧</span>
           </div>
         `;
         const icon = L.divIcon({
           html: markerHtml,
           className: 'ws-marker',
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
         });
 
         const marker = L.marker([ws.lat, ws.lng], { icon: icon }).addTo(map);
@@ -1528,8 +1518,9 @@
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div style="text-align:center; padding:30px; color:#64748b;">
-            <p style="font-size:14px; margin-bottom:6px;">No repair services found</p>
+          <div style="text-align:center; padding:35px 20px; color:#64748b;">
+            <div style="font-size:28px; margin-bottom:8px;">🔍</div>
+            <p style="font-size:14px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">No repair services found</p>
             <p style="font-size:12px;">Try expanding your search radius using the slider.</p>
           </div>
         `;
@@ -1541,7 +1532,9 @@
         return `
           <div class="workshop-card ${isSelected ? 'selected' : ''}" onclick="selectWorkshopById('${ws.id}')">
             <div class="ws-header">
-              <div class="ws-name">${ws.name}</div>
+              <div class="ws-name">
+                <span>${ws.name}</span>
+              </div>
               <div class="ws-distance">${ws.distanceKm} km</div>
             </div>
             <div class="ws-meta">
@@ -1549,7 +1542,7 @@
               <span>•</span>
               <span style="color:#10b981; font-weight:600;">⚡ ETA ~${ws.etaMins}m</span>
               <span>•</span>
-              <span style="color:#38bdf8;">24/7 Verified</span>
+              <span class="ws-badge-247">24/7 Verified</span>
             </div>
             <div class="ws-tags">
               ${ws.categories.map(c => `<span class="ws-tag">${formatCatName(c)}</span>`).join('')}
@@ -1588,7 +1581,7 @@
 
     function callWorkshop(phone) {
       logEvent('TELEPHONY', `Initiating cellular call to dispatch desk: ${phone}`);
-      alert(`Calling AutoMech Dispatch: ${phone}`);
+      alert(`Calling AutoMech 24/7 Dispatch Desk: ${phone}`);
     }
 
     // ==========================================
@@ -1608,7 +1601,7 @@
           const route = data.routes[0];
           logEvent('ROUTING_SUCCESS', `OSRM resolved: ${(route.distance/1000).toFixed(2)} km, ${(route.duration/60).toFixed(1)} mins, ${route.legs[0].steps.length} maneuvers`);
           return {
-            coordinates: route.geometry.coordinates.map(pt => [pt[1], pt[0]]), // convert [lon, lat] to [lat, lon]
+            coordinates: route.geometry.coordinates.map(pt => [pt[1], pt[0]]),
             distanceMeters: route.distance,
             durationSeconds: route.duration,
             steps: route.legs[0].steps
@@ -1626,7 +1619,6 @@
       const steps = 30;
       for (let i = 0; i <= steps; i++) {
         const t = i / steps;
-        // Introduce natural road jitter/turns
         const jitterLat = Math.sin(t * Math.PI * 3) * 0.002;
         const jitterLng = Math.cos(t * Math.PI * 2) * 0.002;
         points.push([
@@ -1637,7 +1629,7 @@
       const distKm = calculateHaversine(startLat, startLng, endLat, endLng);
       return {
         coordinates: points,
-        distanceMeters: distKm * 1000 * 1.25, // road curve multiplier
+        distanceMeters: distKm * 1000 * 1.25,
         durationSeconds: distKm * 150,
         steps: [
           { maneuver: { type: 'depart', modifier: 'straight' }, name: 'Current Roadway', distance: 300 },
@@ -1670,7 +1662,7 @@
       routePolyline = L.polyline(routeData.coordinates, {
         color: '#38bdf8',
         weight: 6,
-        opacity: 0.9,
+        opacity: 0.92,
         lineJoin: 'round'
       }).addTo(map);
 
@@ -1682,8 +1674,8 @@
       const vehicleIcon = L.divIcon({
         className: 'veh-icon-container',
         html: `<div class="vehicle-marker"><svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg></div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
+        iconSize: [34, 34],
+        iconAnchor: [17, 17]
       });
       vehicleMarker = L.marker(routeData.coordinates[0], { icon: vehicleIcon }).addTo(map);
 
@@ -1711,7 +1703,7 @@
 
       document.getElementById('hud-total-dist').textContent = `${totalDistKm} km`;
       document.getElementById('hud-total-eta').textContent = `${totalEtaMins} min`;
-      document.getElementById('hud-speed').textContent = `${Math.round(38 * STATE.simSpeed)} km/h`;
+      document.getElementById('hud-speed').textContent = `${Math.round(42 * STATE.simSpeed)} km/h`;
 
       // Get current step
       const step = STATE.routeSteps[STATE.currentStepIndex] || STATE.routeSteps[0];
@@ -1725,15 +1717,14 @@
     function setManeuverIcon(type, modifier) {
       const svg = document.getElementById('hud-svg-turn');
       if (modifier && modifier.includes('right')) {
-        svg.innerHTML = '<path d="M14 5l7 7m0 0l-7 7m7-7H3"/>'; // right arrow
+        svg.innerHTML = '<path d="M14 5l7 7m0 0l-7 7m7-7H3"/>';
       } else if (modifier && modifier.includes('left')) {
-        svg.innerHTML = '<path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>'; // left arrow
+        svg.innerHTML = '<path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>';
       } else {
-        svg.innerHTML = '<path d="M12 19V5M5 12l7-7 7 7"/>'; // straight arrow
+        svg.innerHTML = '<path d="M12 19V5M5 12l7-7 7 7"/>';
       }
     }
 
-    // Vehicle Movement along coordinates
     function startSimulationLoop() {
       STATE.isSimulating = true;
       clearInterval(STATE.simTimer);
@@ -1743,7 +1734,6 @@
 
         const coords = STATE.routeGeoJson.coordinates;
         if (STATE.simPointIndex >= coords.length - 1) {
-          // Arrived!
           clearInterval(STATE.simTimer);
           speak("You have arrived at your destination: " + STATE.selectedWorkshop.name);
           logEvent('DESTINATION_ARRIVED', `Vehicle safely arrived at ${STATE.selectedWorkshop.name}`);
@@ -1756,11 +1746,9 @@
         vehicleMarker.setLatLng(currentCoord);
         map.panTo(currentCoord, { animate: true, duration: 0.3 });
 
-        // Update progress
         const percent = Math.round((STATE.simPointIndex / coords.length) * 100);
         document.getElementById('sim-progress').textContent = `${percent}% Completed`;
 
-        // Switch maneuver steps periodically
         if (STATE.simPointIndex % 8 === 0 && STATE.currentStepIndex < STATE.routeSteps.length - 1) {
           STATE.currentStepIndex++;
           const nextStep = STATE.routeSteps[STATE.currentStepIndex];
@@ -1856,14 +1844,12 @@
       logEvent('SOS_CONFIRMED', `PRIORITY EMERGENCY DISPATCH TRIGGERED! Incident Unit #402 assigned to ${nearestWs.name}.`, 'danger');
       speak(`Emergency SOS activated. Unit 402 from ${nearestWs.name} is dispatched to your GPS location.`);
 
-      // Start Technician Telemetry Simulation
       startTechnicianDispatch(nearestWs);
     }
 
     async function startTechnicianDispatch(ws) {
       alert(`🚨 EMERGENCY UNIT DISPATCHED!\nMechanic Vikram (Apex Rapid Response)\nETA: 6 Minutes\nPhone: ${ws.phone}\nTracking vehicle live on map...`);
       
-      // Compute Route from Garage to User
       const routeData = await calculateRoute(ws.lat, ws.lng, STATE.userLat, STATE.userLng);
       if (!routeData) return;
 
@@ -1882,7 +1868,6 @@
       });
       vehicleMarker = L.marker([ws.lat, ws.lng], { icon: towIcon }).addTo(map);
 
-      // Animate mechanic towards user
       let idx = 0;
       const coords = routeData.coordinates;
       const tInterval = setInterval(() => {
@@ -1959,10 +1944,19 @@
     let searchDebounce = null;
     const searchInput = document.getElementById('search-input');
     const searchDropdown = document.getElementById('search-dropdown');
+    const searchClearBtn = document.getElementById('search-clear-btn');
 
     searchInput.addEventListener('input', (e) => {
       clearTimeout(searchDebounce);
       const query = e.target.value.trim();
+      if (query.length > 0) {
+        searchClearBtn.style.display = 'block';
+      } else {
+        searchClearBtn.style.display = 'none';
+        searchDropdown.style.display = 'none';
+        return;
+      }
+
       if (query.length < 3) {
         searchDropdown.style.display = 'none';
         return;
@@ -1985,6 +1979,12 @@
         }
       }, 400);
     });
+
+    function clearSearch() {
+      searchInput.value = '';
+      searchClearBtn.style.display = 'none';
+      searchDropdown.style.display = 'none';
+    }
 
     function selectSearchResult(lat, lon, displayName) {
       searchDropdown.style.display = 'none';
@@ -2015,80 +2015,21 @@
     }
 
     function setViewMode(mode) {
-      const isMobile = window.innerWidth <= 860 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      document.body.className = `mode-${mode}${isMobile ? ' is-mobile-screen' : ''}`;
+      STATE.viewMode = mode;
+      document.body.className = `mode-${mode}`;
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`btn-${mode}`);
       if (activeBtn) activeBtn.classList.add('active');
-      setTimeout(() => { if (map) map.invalidateSize(); }, 300);
+      setTimeout(() => map.invalidateSize(), 300);
       logEvent('VIEWPORT', `Switched layout view to: ${mode.toUpperCase()}`);
     }
-
-    function toggleNativeFullscreen() {
-      const doc = document;
-      const docEl = document.documentElement;
-      const isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
-
-      if (!isFs) {
-        const rfs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-        if (rfs) {
-          rfs.call(docEl).catch(err => {
-            console.warn('Fullscreen request failed:', err);
-          });
-        }
-      } else {
-        const efs = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
-        if (efs) {
-          efs.call(doc).catch(() => {});
-        }
-      }
-    }
-
-    function updateFullscreenIcon() {
-      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-      const svg = document.getElementById('fullscreen-icon');
-      if (!svg) return;
-      if (isFs) {
-        // Exit/compress icon
-        svg.innerHTML = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
-      } else {
-        // Expand icon
-        svg.innerHTML = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
-      }
-    }
-
-    document.addEventListener('fullscreenchange', () => {
-      updateFullscreenIcon();
-      if (map) setTimeout(() => map.invalidateSize(), 200);
-    });
-    document.addEventListener('webkitfullscreenchange', () => {
-      updateFullscreenIcon();
-      if (map) setTimeout(() => map.invalidateSize(), 200);
-    });
-
-    function checkResponsiveDevice() {
-      const isMobile = window.innerWidth <= 860 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      if (isMobile) {
-        document.body.classList.add('is-mobile-screen');
-        if (!document.body.classList.contains('mode-fullscreen')) {
-          setViewMode('fullscreen');
-        }
-      } else {
-        document.body.classList.remove('is-mobile-screen');
-      }
-    }
-
-    window.addEventListener('resize', () => {
-      checkResponsiveDevice();
-      if (map) map.invalidateSize();
-    });
 
     function toggleSheetExpand() {
       const sheet = document.getElementById('bottom-sheet');
       sheet.style.maxHeight = sheet.style.maxHeight === '80%' ? '48%' : '80%';
     }
 
-    // Clock
+    // Live Clock
     setInterval(() => {
       const d = new Date();
       document.getElementById('live-clock').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -2107,7 +2048,6 @@
       div.innerHTML = `<span class="log-time">[${time}] [${tag}]</span> ${message}`;
       stream.insertBefore(div, stream.firstChild);
 
-      // Random jitter for latency KPI
       const latency = Math.floor(Math.random() * 8) + 14;
       document.getElementById('kpi-latency').textContent = `${latency} ms`;
     }
@@ -2153,7 +2093,6 @@
 
     // Window load trigger
     window.addEventListener('load', () => {
-      checkResponsiveDevice();
       initMap();
     });
   </script>

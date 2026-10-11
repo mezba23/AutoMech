@@ -258,6 +258,56 @@
       display: none;
     }
 
+    @media (max-width: 900px) {
+      header.platform-header {
+        display: none !important;
+      }
+      .main-workspace {
+        padding: 0 !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+      }
+      .telemetry-console {
+        display: none !important;
+      }
+      .simulator-wrapper {
+        width: 100% !important;
+        height: 100% !important;
+        height: 100dvh !important;
+      }
+      .device-bezel {
+        width: 100% !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .device-bezel::before {
+        display: none !important;
+      }
+      .phone-status-bar {
+        display: none !important;
+      }
+      .phone-screen {
+        border-radius: 0 !important;
+      }
+      .fullscreen-exit-pill {
+        display: none !important;
+      }
+      .map-top-bar {
+        top: max(12px, env(safe-area-inset-top, 12px)) !important;
+      }
+      .navigation-hud {
+        top: max(12px, env(safe-area-inset-top, 12px)) !important;
+      }
+      .bottom-sheet {
+        padding-bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px))) !important;
+      }
+    }
+
     .fullscreen-exit-pill {
       display: none;
       position: fixed;
@@ -972,6 +1022,34 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.55);
     }
 
+    /* Floating Toast Notification */
+    .app-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(56, 189, 248, 0.2);
+      backdrop-filter: blur(16px);
+      color: #f8fafc;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 99999;
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .app-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
     /* Keyframes */
     @keyframes slideDown {
       from { transform: translateY(-20px); opacity: 0; }
@@ -1383,6 +1461,7 @@
       const iconEl = document.getElementById('layer-icon');
       if (iconEl) iconEl.textContent = icons[currentTileMode];
       logEvent('MAP_THEME', `Map style switched to: ${names[currentTileMode]} (No API key required)`);
+      if (typeof showToast === 'function') showToast(`🗺️ Theme: ${names[currentTileMode]}`);
     }
 
     // ==========================================
@@ -2024,9 +2103,36 @@
       logEvent('VIEWPORT', `Switched layout view to: ${mode.toUpperCase()}`);
     }
 
+    let sheetState = 1; // 0: peek (65px), 1: standard (48%), 2: expanded (82%)
     function toggleSheetExpand() {
       const sheet = document.getElementById('bottom-sheet');
-      sheet.style.maxHeight = sheet.style.maxHeight === '80%' ? '48%' : '80%';
+      sheetState = (sheetState + 1) % 3;
+      if (sheetState === 0) {
+        sheet.style.maxHeight = '65px';
+        showToast('📐 Full Map View (Sheet minimized)');
+      } else if (sheetState === 1) {
+        sheet.style.maxHeight = '48%';
+        showToast('📱 Balanced Split View');
+      } else {
+        sheet.style.maxHeight = '82%';
+        showToast('📋 Garages List Expanded');
+      }
+    }
+
+    function showToast(msg, duration = 2400) {
+      let toast = document.getElementById('app-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.className = 'app-toast';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = msg;
+      toast.classList.add('show');
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
     }
 
     // Live Clock
